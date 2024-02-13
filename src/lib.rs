@@ -34,7 +34,7 @@ const START_ADDR: u16 = 0x200;
 pub struct Emu {
     pc: u16,
     ram: [u8; RAM_SIZE],
-    screen: [bool; SCREEN_WIDTH * SCREEN_HEIGHT],
+    screen: Vec<bool>,
     v_reg: [u8; NUM_REGS],
     i_reg: u16,
     sp: u16,
@@ -42,6 +42,7 @@ pub struct Emu {
     keys: [bool; NUM_KEYS],
     dt: u8,
     st: u8,
+    hrm: bool,
 }
 
 impl Emu {
@@ -49,7 +50,7 @@ impl Emu {
         let mut new_emu = Self {
             pc: START_ADDR,
             ram: [0; RAM_SIZE],
-            screen: [false; SCREEN_WIDTH * SCREEN_HEIGHT],
+            screen: vec![false; SCREEN_WIDTH * SCREEN_HEIGHT],
             v_reg: [0; NUM_REGS],
             i_reg: 0,
             sp: 0,
@@ -57,6 +58,7 @@ impl Emu {
             keys: [false; NUM_KEYS],
             dt: 0,
             st: 0,
+            hrm: false,
         };
 
         new_emu.ram[..FONTSET_SIZE].copy_from_slice(&FONTSET);
@@ -67,7 +69,6 @@ impl Emu {
     pub fn reset(&mut self) {
         self.pc = START_ADDR;
         self.ram = [0; RAM_SIZE];
-        self.screen = [false; SCREEN_WIDTH * SCREEN_HEIGHT];
         self.v_reg = [0; NUM_REGS];
         self.i_reg = 0;
         self.sp = 0;
@@ -75,7 +76,19 @@ impl Emu {
         self.keys = [false; NUM_KEYS];
         self.dt = 0;
         self.st = 0;
-        self.ram[..FONTSET_SIZE].copy_from_slice(&FONTSET)
+        self.ram[..FONTSET_SIZE].copy_from_slice(&FONTSET);
+
+        self.reset_screen()
+    }
+
+    pub fn reset_screen(&mut self) {
+        let screen_size_modifier: usize = if self.hrm { 2 * 2 } else { 1 * 1 };
+        self.screen = vec![false; SCREEN_HEIGHT * SCREEN_WIDTH * screen_size_modifier];
+    }
+
+    fn toggle_res_mode(&mut self) {
+        self.hrm ^= true;
+        self.reset_screen()
     }
 
     fn push (&mut self, val: u16) {
