@@ -117,11 +117,23 @@ impl Emu {
 
         match (digit1, digit2, digit3, digit4) {
             (0x0, 0x0, 0x0, 0x0) => return,
+            // scroll the screen down by n [0, 15] pixels
+            (0x0, 0x0, 0xC, _) => {
+
+            },
             // clear lores screen
             (0x0, 0x0, 0xE, 0x0) => self.reset_screen(),
             (0x0, 0x0, 0xE, 0xE) => {
                 let ret_addr = self.pop();
                 self.pc = ret_addr;
+            },
+            // scroll the screen right by 4 px
+            (0x0, 0x0, 0xF, 0xB) => {
+
+            },
+            // scroll the screen left by 4 px
+            (0x0, 0x0, 0xF, 0xC) => {
+
             },
             // disable hires mode (and clear screen)
             (0x0, 0x0, 0xF, 0xE) => {
