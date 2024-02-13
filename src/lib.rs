@@ -123,6 +123,8 @@ impl Emu {
                 let ret_addr = self.pop();
                 self.pc = ret_addr;
             },
+            // disable hires mode (and clear screen)
+            // enable hires mode (and clear screen)
             (0x0, 0x0, 0xF, 0xF) => {
                 self.hrm = true;
                 self.reset_screen();
