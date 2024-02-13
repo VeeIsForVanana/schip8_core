@@ -127,12 +127,12 @@ impl Emu {
             (0x0, 0x0, 0xF, 0xE) => {
                 self.hrm = false;
                 self.reset_screen();
-            }
+            },
             // enable hires mode (and clear screen)
             (0x0, 0x0, 0xF, 0xF) => {
                 self.hrm = true;
                 self.reset_screen();
-            }
+            },
             (0x1, _, _, _) => {
                 let nnn = op & 0xFFF;
                 self.pc = nnn;
