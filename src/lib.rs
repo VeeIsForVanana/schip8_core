@@ -133,7 +133,17 @@ impl Emu {
             },
             // scroll the screen left by 4 px
             (0x0, 0x0, 0xF, 0xC) => {
-
+                // track the scaling factor to be applied (hires vs lores)
+                let scaling_factor = if self.hrm { 2 } else { 1 };
+                // clone the old state of the screen
+                let old_screen = self.screen.clone();
+                // clear the old screen
+                self.reset_screen();
+                // loop through rows of screen and copy indices [3..] the old screen onto indices [..SCREEN_WIDTH - 3] the new screen
+                for y_coord in 0..(SCREEN_HEIGHT * scaling_factor) {
+                    let starting_index = y_coord * SCREEN_WIDTH;
+                    self.screen[starting_index..(SCREEN_WIDTH * scaling_factor) - 3].clone_from_slice(&old_screen[(starting_index + 3)..(starting_index + SCREEN_WIDTH)]);
+                }
             },
             // disable hires mode (and clear screen)
             (0x0, 0x0, 0xF, 0xE) => {
