@@ -86,11 +86,6 @@ impl Emu {
         self.screen = vec![false; SCREEN_HEIGHT * SCREEN_WIDTH * screen_size_modifier];
     }
 
-    fn toggle_res_mode(&mut self) {
-        self.hrm ^= true;
-        self.reset_screen()
-    }
-
     fn push (&mut self, val: u16) {
         self.stack[self.sp as usize] = val;
         self.sp += 1;
