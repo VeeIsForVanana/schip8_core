@@ -117,7 +117,8 @@ impl Emu {
 
         match (digit1, digit2, digit3, digit4) {
             (0x0, 0x0, 0x0, 0x0) => return,
-            (0x0, 0x0, 0xE, 0x0) => self.screen = [false; SCREEN_WIDTH * SCREEN_HEIGHT],
+            // clear lores screen
+            (0x0, 0x0, 0xE, 0x0) => self.screen = vec![false; SCREEN_WIDTH * SCREEN_HEIGHT],
             (0x0, 0x0, 0xE, 0xE) => {
                 let ret_addr = self.pop();
                 self.pc = ret_addr;
