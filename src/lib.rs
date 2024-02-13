@@ -135,10 +135,10 @@ impl Emu {
                 let old_screen = self.screen.clone();
                 // clear the old screen
                 self.reset_screen();
-                // loop through rows of screen and copy indices [3..] the old screen onto indices [..SCREEN_WIDTH - 3] the new screen
+                // loop through rows of screen and copy the appropriate indices of the old screen onto indices of the new screen
                 for y_coord in 0..(SCREEN_HEIGHT * scaling_factor) {
                     let starting_index = y_coord * SCREEN_WIDTH;
-                    self.screen[starting_index..(SCREEN_WIDTH * scaling_factor) - 3].clone_from_slice(&old_screen[starting_index..(SCREEN_WIDTH * scaling_factor) - 3]);
+                    self.screen[(starting_index + 3)..(starting_index + SCREEN_WIDTH)].clone_from_slice(&old_screen[starting_index..(SCREEN_WIDTH * scaling_factor) - 3]);
                 }
             },
             // scroll the screen left by 4 px
@@ -149,7 +149,7 @@ impl Emu {
                 let old_screen = self.screen.clone();
                 // clear the old screen
                 self.reset_screen();
-                // loop through rows of screen and copy indices [3..] the old screen onto indices [..SCREEN_WIDTH - 3] the new screen
+                // loop through rows of screen and copy the appropriate indices of the old screen onto indices of the new screen
                 for y_coord in 0..(SCREEN_HEIGHT * scaling_factor) {
                     let starting_index = y_coord * SCREEN_WIDTH;
                     self.screen[starting_index..(SCREEN_WIDTH * scaling_factor) - 3].clone_from_slice(&old_screen[(starting_index + 3)..(starting_index + SCREEN_WIDTH)]);
