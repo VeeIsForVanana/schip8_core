@@ -119,7 +119,20 @@ impl Emu {
             (0x0, 0x0, 0x0, 0x0) => return,
             // scroll the screen down by n [0, 15] pixels
             (0x0, 0x0, 0xC, _) => {
+                // set up important values
+                let n_rows = digit4 as usize;
+                let scaling_factor = if self.hrm { 2 } else { 1 };
+                
+                // keep the old state of the screen
+                let old_screen = self.screen.clone();
+                // clear the old screen
+                self.reset_screen();
 
+                // define the starting and ending index
+                let starting_index = n_rows * (SCREEN_WIDTH * scaling_factor);
+                let ending_index = (SCREEN_HEIGHT * scaling_factor * SCREEN_WIDTH * scaling_factor) - starting_index;
+
+                self.screen[starting_index..].clone_from_slice(&old_screen[..ending_index]);
             },
             // clear lores screen
             (0x0, 0x0, 0xE, 0x0) => self.reset_screen(),
